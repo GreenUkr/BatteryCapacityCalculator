@@ -5,6 +5,37 @@ body {
     padding: 20px;
 }
 
+.upper {
+    width: 90%;
+    max-width: 1100px;
+    margin: 1rem auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+.logo, .heading {
+    text-align: left;
+    margin-bottom: 1rem;
+    display: contents;
+}
+
+.footer {
+    width: 90%;
+    max-width: 1100px;
+    margin: 1rem auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+.logo-small, .heading-small {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    display: contents;
+}
+
 .container {
     width: 90%;
     max-width: 1100px;
@@ -14,11 +45,6 @@ body {
     gap: 10px;
 }
 
-.logo, .heading {
-    grid-column: span 6;
-    text-align: center;
-    margin-bottom: 20px;
-}
 
 .header, .row, .capacity-container {
     display: contents;
