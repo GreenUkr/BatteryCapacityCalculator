@@ -21,20 +21,29 @@ function calculatePower(rowNumber) {
 function updateTotalPower() {
     const rows = document.querySelectorAll('.row');
     let totalPower = 0;
+    let maxVoltage = 0;
 
     rows.forEach(row => {
         if (!row.classList.contains('total-row')) {
             const checkbox = row.querySelector('.device-checkbox');
+            const voltageSelect = row.querySelector('.voltage-select');
             const powerField = row.querySelector('.power-field');
             const power = parseFloat(powerField.value);
+            const voltage = parseFloat(voltageSelect.value);
 
-            if (checkbox.checked && !isNaN(power)) {
-                totalPower += power;
+            if (checkbox.checked) {
+                if (!isNaN(power)) {
+                    totalPower += power;
+                }
+                if (!isNaN(voltage) && voltage > maxVoltage) {
+                    maxVoltage = voltage;
+                }
             }
         }
     });
 
     document.getElementById('total-power').value = totalPower.toFixed(2);
+    document.getElementById('max-voltage').value = maxVoltage ? `${maxVoltage}V` : '';
 }
 
 // Add event listeners to checkboxes to update total power on change
