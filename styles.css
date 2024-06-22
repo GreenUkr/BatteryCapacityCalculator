@@ -6,16 +6,25 @@ body {
 }
 
 .container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 10px;
 }
 
-.header, .row {
+.logo, .heading {
+    grid-column: span 6;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header, .row, .capacity-container {
     display: contents;
 }
 
-.header div, .row div {
+.header div, .row div, .capacity-container div {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
@@ -38,4 +47,13 @@ button {
 
 .total-row {
     font-weight: bold;
+}
+
+.capacity-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }

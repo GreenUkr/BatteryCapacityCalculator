@@ -8,6 +8,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="logo">Your Logo Here</div>
+        <div class="heading">Device Power Calculator</div>
+
         <div class="header">
             <div>Device</div>
             <div>Use Device</div>
@@ -113,6 +116,24 @@
             <div><input type="text" id="total-power" readonly> W</div>
         </div>
     </div>
+
+    <div class="capacity-container">
+        <div>Desired time to work</div>
+        <div>
+            <select id="desired-time" onchange="calculateCapacity()">
+                <option value="">---</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="12">12</option>
+                <option value="16">16</option>
+                <option value="24">24</option>
+            </select> Hours
+        </div>
+        <div>Need Capacity</div>
+        <div><input type="text" id="required-capacity" readonly> Wh</div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
