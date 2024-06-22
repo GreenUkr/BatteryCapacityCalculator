@@ -36,3 +36,8 @@ function updateTotalPower() {
 
     document.getElementById('total-power').value = totalPower.toFixed(2);
 }
+
+// Add event listeners to checkboxes to update total power on change
+document.querySelectorAll('.device-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updateTotalPower);
+});
