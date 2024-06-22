@@ -59,7 +59,7 @@ function calculateCapacity() {
         return;
     }
 
-    const requiredCapacity = totalPower * desiredTime;
+    const requiredCapacity = totalPower * desiredTime * 1.25;
     requiredCapacityField.value = requiredCapacity.toFixed(2);
 }
 

@@ -2,7 +2,7 @@ body {
     background-color: white;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 1rem;
 }
 
 .upper {
@@ -10,30 +10,23 @@ body {
     max-width: 1100px;
     margin: 1rem auto;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
 }
 
 .logo, .heading {
     text-align: left;
-    margin-bottom: 1rem;
-    display: contents;
-}
-
-.footer {
-    width: 90%;
-    max-width: 1100px;
-    margin: 1rem auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-}
-
-.logo-small, .heading-small {
-    text-align: center;
-    margin-top: 1rem;
+    font-size: x-large;
+    font-weight: bold;
     margin-bottom: 0.5rem;
-    display: contents;
+}
+
+.logo img {
+    width: 10rem;
+}
+.heading {
+    grid-column: span 3;
+    margin-top: 2rem;
 }
 
 .container {
@@ -42,7 +35,7 @@ body {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    gap: 0.5rem;
 }
 
 
@@ -52,11 +45,11 @@ body {
 
 .header div, .row div, .capacity-container div {
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 0.5rem;
     text-align: center;
 }
 
-.header div {
+.header div, .total-row div {
     background-color: #f4f4f4;
     font-weight: bold;
 }
@@ -67,19 +60,43 @@ input[type="text"] {
 }
 
 button {
-    padding: 5px 10px;
+    padding: 0.25rem 0.5rem;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
     cursor: pointer;
-}
-
-.total-row {
-    font-weight: bold;
 }
 
 .capacity-container {
     width: 90%;
     max-width: 1100px;
-    margin: 20px auto;
+    margin: 1rem auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 0.5rem;
+}
+
+.footer {
+    width: 90%;
+    max-width: 1100px;
+    margin: 1rem auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.logo-small, .heading-small {
+    font-size: small;
+    margin-top: 1rem;
+    /* margin-bottom: 0.5rem; */
+}
+.logo-small {
+    text-align: right;
+}
+.heading-small {
+    text-align: left;
+    margin-top: 1.5rem;
+}
+.logo-small img {
+    width: 4rem;
 }
