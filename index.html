@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Power Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>Device</div>
+            <div>Checkbox</div>
+            <div>Voltage</div>
+            <div>Current</div>
+            <div>Calculate</div>
+            <div>Power (W)</div>
+        </div>
+        <div class="row" id="row1">
+            <div>Device 1</div>
+            <div><input type="checkbox" class="device-checkbox"></div>
+            <div>
+                <select class="voltage-select">
+                    <option value="">---</option>
+                    <option value="5">5V</option>
+                    <option value="9">9V</option>
+                    <option value="12">12V</option>
+                </select>
+            </div>
+            <div>
+                <select class="current-select">
+                    <option value="">---</option>
+                    <option value="0.5">0.5A</option>
+                    <option value="1.0">1.0A</option>
+                    <option value="1.5">1.5A</option>
+                </select>
+            </div>
+            <div><button onclick="calculatePower(1)">Calculate</button></div>
+            <div><input type="text" class="power-field" readonly></div>
+        </div>
+        <div class="row" id="row2">
+            <div>Device 2</div>
+            <div><input type="checkbox" class="device-checkbox"></div>
+            <div>
+                <select class="voltage-select">
+                    <option value="">---</option>
+                    <option value="5">5V</option>
+                    <option value="9">9V</option>
+                    <option value="12">12V</option>
+                </select>
+            </div>
+            <div>
+                <select class="current-select">
+                    <option value="">---</option>
+                    <option value="0.5">0.5A</option>
+                    <option value="1.0">1.0A</option>
+                    <option value="1.5">1.5A</option>
+                </select>
+            </div>
+            <div><button onclick="calculatePower(2)">Calculate</button></div>
+            <div><input type="text" class="power-field" readonly></div>
+        </div>
+        <div class="row" id="row3">
+            <div>Device 3</div>
+            <div><input type="checkbox" class="device-checkbox"></div>
+            <div>
+                <select class="voltage-select">
+                    <option value="">---</option>
+                    <option value="5">5V</option>
+                    <option value="9">9V</option>
+                    <option value="12">12V</option>
+                </select>
+            </div>
+            <div>
+                <select class="current-select">
+                    <option value="">---</option>
+                    <option value="0.5">0.5A</option>
+                    <option value="1.0">1.0A</option>
+                    <option value="1.5">1.5A</option>
+                </select>
+            </div>
+            <div><button onclick="calculatePower(3)">Calculate</button></div>
+            <div><input type="text" class="power-field" readonly></div>
+        </div>
+        <div class="row" id="row4">
+            <div>Device 4</div>
+            <div><input type="checkbox" class="device-checkbox"></div>
+            <div>
+                <select class="voltage-select">
+                    <option value="">---</option>
+                    <option value="5">5V</option>
+                    <option value="9">9V</option>
+                    <option value="12">12V</option>
+                </select>
+            </div>
+            <div>
+                <select class="current-select">
+                    <option value="">---</option>
+                    <option value="0.5">0.5A</option>
+                    <option value="1.0">1.0A</option>
+                    <option value="1.5">1.5A</option>
+                </select>
+            </div>
+            <div><button onclick="calculatePower(4)">Calculate</button></div>
+            <div><input type="text" class="power-field" readonly></div>
+        </div>
+        <div class="row total-row">
+            <div>Total Power</div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div><input type="text" id="total-power" readonly></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

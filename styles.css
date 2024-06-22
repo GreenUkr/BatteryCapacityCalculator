@@ -1,0 +1,41 @@
+body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.header, .row {
+    display: contents;
+}
+
+.header div, .row div {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.header div {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    width: 80px;
+    text-align: center;
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.total-row {
+    font-weight: bold;
+}
