@@ -1,5 +1,5 @@
-const VOLTAGES = ["5", "9", "12", "19", "24", "36", "48"];
-const CURRENTS = ["0.5", "1.0", "1.5"];
+const VOLTAGES = ["5", "9", "12", "19", "24", "36", "48", "56"];
+const CURRENTS = ["0.5", "1.0", "1.5","2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0"];
 const HOURS = ["4", "6", "8", "12", "16", "24"];
 const BATTERY_VOLTAGES = ["6", "12", "24", "48"];
 
@@ -66,11 +66,15 @@ function createBatteryContainer() {
     const container = document.createElement('div');
     container.classList.add('battery-container');
     
-    container.innerHTML = `
-        <div>Recommended Battery (80% discharge)</div>
-        <div id="battery-recommendations"></div>
-    `;
-
+    const title = document.createElement('div');
+    title.textContent = 'Recommended Battery (80% discharge)';
+    
+    const recommendations = document.createElement('div');
+    recommendations.id = 'battery-recommendations';
+    
+    container.appendChild(title);
+    container.appendChild(recommendations);
+    
     batteryContainer.appendChild(container);
 }
 
@@ -169,16 +173,19 @@ function recommendBattery() {
     if (closestLowerVoltage === null) {
       recommendedCapacities.push('No suitable lower voltage found');
     } else {
-      const lowerCapacity = Math.ceil((requiredEnergy / closestLowerVoltage) * 1.25 * 1000);
+    //   const lowerCapacity = Math.ceil((requiredEnergy / closestLowerVoltage) * 1.25 * 1000);
+    //   const lowerCapacity = (requiredEnergy / closestLowerVoltage) * 1.25 * 1000;
+      const lowerCapacity = ceilToCell(closestLowerVoltage);
       recommendedCapacities.push(`StepUp Invertor Battery ${closestLowerVoltage}V: ${lowerCapacity} mAh`);
     }
   
     // Check if maxVoltage itself exists in BATTERY_VOLTAGES
     if (BATTERY_VOLTAGES.includes(maxVoltage.toString())) {
-      recommendedCapacities.push(`Battery ${maxVoltage}V: ${Math.ceil(requiredEnergy * 1.25 * 1000)} mAh`);
+    //   recommendedCapacities.push(`StepDown Invertor Battery ${maxVoltage}V: ${(requiredEnergy / maxVoltage)  * 1.25 * 1000} mAh`);
+      recommendedCapacities.push(`StepDown Invertor Battery ${maxVoltage}V: ${ceilToCell(maxVoltage)} mAh`);
     } else if (closestHigherVoltage !== null) {
-      const higherCapacity = Math.ceil((requiredEnergy / closestHigherVoltage) * 1.25 * 1000);
-      recommendedCapacities.push(`Battery ${closestHigherVoltage}V: ${higherCapacity} mAh`);
+      const higherCapacity = ceilToCell(closestHigherVoltage);
+      recommendedCapacities.push(`StepDown Invertor Battery ${closestHigherVoltage}V: ${higherCapacity} mAh`);
     } else {
       recommendedCapacities.push('No suitable higher voltage found');
     }
@@ -186,7 +193,16 @@ function recommendBattery() {
     batteryRecommendations.innerHTML = recommendedCapacities.join('<br>');
   }
   
-  
+function ceilToCell(voltage) {
+    const requiredEnergy = parseFloat(document.getElementById('required-energy').value);
+
+    if (isNaN(voltage) || isNaN(requiredEnergy)) {
+        return 0;
+    }
+    const capacity = (requiredEnergy / voltage) * 1.25 * 1000;
+
+    return Math.ceil(capacity/100) * 100;
+} 
   
 // Create rows, capacity container, and battery container dynamically
 createRows(4); // You can change the number of rows here
