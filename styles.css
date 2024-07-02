@@ -28,7 +28,7 @@ body {
     text-align: center;
 }
 
-.header div {
+.header div, .capacity-container div {
     background-color: #f4f4f4;
     font-weight: bold;
 }

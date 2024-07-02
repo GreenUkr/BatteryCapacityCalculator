@@ -1,5 +1,6 @@
 const VOLTAGES = ["5", "9", "12"];
 const CURRENTS = ["0.5", "1.0", "1.5"];
+const HOURS = ["4", "6", "8", "12", "16", "24"];
 
 function createSelectOptions(options) {
     return options.map(option => `<option value="${option}">${option}</option>`).join('');
@@ -7,6 +8,7 @@ function createSelectOptions(options) {
 
 const voltageOptions = createSelectOptions(VOLTAGES);
 const currentOptions = createSelectOptions(CURRENTS);
+const hoursOptions = createSelectOptions(HOURS);
 
 function createRows(numberOfRows) {
     const rowsContainer = document.getElementById('rows-container');
@@ -36,6 +38,26 @@ function createRows(numberOfRows) {
 
         rowsContainer.appendChild(row);
     }
+}
+
+function createCapacityContainer() {
+    const capacityContainer = document.getElementById('capacity-container');
+    const container = document.createElement('div');
+    container.classList.add('capacity-container');
+    
+    container.innerHTML = `
+        <div>Desired time to work</div>
+        <div>
+            <select id="desired-time" onchange="calculateCapacity()">
+                <option value="">---</option>
+                ${hoursOptions}
+            </select> Hours
+        </div>
+        <div>Need Capacity</div>
+        <div><input type="text" id="required-capacity" readonly> Wh</div>
+    `;
+
+    capacityContainer.appendChild(container);
 }
 
 function calculatePower(rowNumber) {
@@ -103,5 +125,6 @@ function calculateCapacity() {
     requiredCapacityField.value = requiredCapacity.toFixed(2);
 }
 
-// Create rows dynamically
+// Create rows and capacity container dynamically
 createRows(4); // You can change the number of rows here
+createCapacityContainer(); // Create the capacity container
