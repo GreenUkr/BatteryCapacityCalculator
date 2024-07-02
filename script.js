@@ -175,16 +175,16 @@ function recommendBattery() {
     } else {
     //   const lowerCapacity = Math.ceil((requiredEnergy / closestLowerVoltage) * 1.25 * 1000);
     //   const lowerCapacity = (requiredEnergy / closestLowerVoltage) * 1.25 * 1000;
-      const lowerCapacity = ceilToCell(closestLowerVoltage);
+      const lowerCapacity = ceilToCell(requiredEnergy,closestLowerVoltage);
       recommendedCapacities.push(`StepUp Invertor Battery ${closestLowerVoltage}V: ${lowerCapacity} mAh`);
     }
   
     // Check if maxVoltage itself exists in BATTERY_VOLTAGES
     if (BATTERY_VOLTAGES.includes(maxVoltage.toString())) {
     //   recommendedCapacities.push(`StepDown Invertor Battery ${maxVoltage}V: ${(requiredEnergy / maxVoltage)  * 1.25 * 1000} mAh`);
-      recommendedCapacities.push(`StepDown Invertor Battery ${maxVoltage}V: ${ceilToCell(maxVoltage)} mAh`);
+      recommendedCapacities.push(`StepDown Invertor Battery ${maxVoltage}V: ${ceilToCell(requiredEnergy,maxVoltage)} mAh`);
     } else if (closestHigherVoltage !== null) {
-      const higherCapacity = ceilToCell(closestHigherVoltage);
+      const higherCapacity = ceilToCell(requiredEnergy,closestHigherVoltage);
       recommendedCapacities.push(`StepDown Invertor Battery ${closestHigherVoltage}V: ${higherCapacity} mAh`);
     } else {
       recommendedCapacities.push('No suitable higher voltage found');
@@ -193,14 +193,12 @@ function recommendBattery() {
     batteryRecommendations.innerHTML = recommendedCapacities.join('<br>');
   }
   
-function ceilToCell(voltage) {
-    const requiredEnergy = parseFloat(document.getElementById('required-energy').value);
-
+function ceilToCell(requiredEnergy, voltage) {
+    // const requiredEnergy = parseFloat(document.getElementById('required-energy').value);
     if (isNaN(voltage) || isNaN(requiredEnergy)) {
         return 0;
     }
     const capacity = (requiredEnergy / voltage) * 1.25 * 1000;
-
     return Math.ceil(capacity/100) * 100;
 } 
   
