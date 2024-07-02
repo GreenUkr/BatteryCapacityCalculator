@@ -1,3 +1,43 @@
+const VOLTAGES = ["5", "9", "12"];
+const CURRENTS = ["0.5", "1.0", "1.5"];
+
+function createSelectOptions(options) {
+    return options.map(option => `<option value="${option}">${option}</option>`).join('');
+}
+
+const voltageOptions = createSelectOptions(VOLTAGES);
+const currentOptions = createSelectOptions(CURRENTS);
+
+function createRows(numberOfRows) {
+    const rowsContainer = document.getElementById('rows-container');
+    for (let i = 1; i <= numberOfRows; i++) {
+        const row = document.createElement('div');
+        row.classList.add('row');
+        row.id = `row${i}`;
+
+        row.innerHTML = `
+            <div>Device ${i}</div>
+            <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
+            <div>
+                <select class="voltage-select">
+                    <option value="">---</option>
+                    ${voltageOptions}
+                </select> V
+            </div>
+            <div>
+                <select class="current-select">
+                    <option value="">---</option>
+                    ${currentOptions}
+                </select> A
+            </div>
+            <div><button onclick="calculatePower(${i})">Calculate</button></div>
+            <div><input type="text" class="power-field" readonly> W</div>
+        `;
+
+        rowsContainer.appendChild(row);
+    }
+}
+
 function calculatePower(rowNumber) {
     const row = document.getElementById(`row${rowNumber}`);
     const voltageSelect = row.querySelector('.voltage-select');
@@ -59,7 +99,7 @@ function calculateCapacity() {
         return;
     }
 
-    const requiredCapacity = totalPower * desiredTime * 1.25;
+    const requiredCapacity = totalPower * desiredTime;
     requiredCapacityField.value = requiredCapacity.toFixed(2);
 }
 
@@ -67,3 +107,6 @@ function calculateCapacity() {
 document.querySelectorAll('.device-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', updateTotalPower);
 });
+
+// Create rows dynamically
+createRows(4); // You can change the number of rows here

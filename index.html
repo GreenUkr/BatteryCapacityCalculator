@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="upper">
-        <div class="logo"><img src="/image/greenukr_old.jpg" alt="GreenUkr Logo"></div>
-        <div class="heading">Devices Power Calculator</div>
-    </div>
     <div class="container">
+        <div class="logo">Your Logo Here</div>
+        <div class="heading">Device Power Calculator</div>
+
         <div class="header">
             <div>Device</div>
             <div>Use Device</div>
@@ -20,118 +19,7 @@
             <div>Calculate</div>
             <div>Power (W)</div>
         </div>
-        <div class="row" id="row1">
-            <div>Device 1</div>
-            <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-            <div>
-                <select class="voltage-select">
-                    <option value="">---</option>
-                    <option value="5">5</option>
-                    <option value="9">9</option>
-                    <option value="12">12</option>
-                    <option value="19.5">19.5</option>
-                </select> V
-            </div>
-            <div>
-                <select class="current-select">
-                    <option value="">---</option>
-                    <option value="0.5">0.5</option>
-                    <option value="1.0">1.0</option>
-                    <option value="1.5">1.5</option>
-                    <option value="2.0">2.0</option>
-                    <option value="2.5">2.5</option>
-                    <option value="3.0">3.0</option>
-                    <option value="3.5">3.5</option>
-                    <option value="4.0">4.0</option>
-                </select> A
-            </div>
-            <div><button onclick="calculatePower(1)">Calculate</button></div>
-            <div><input type="text" class="power-field" readonly> W</div>
-        </div>
-        <div class="row" id="row2">
-            <div>Device 2</div>
-            <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-            <div>
-                <select class="voltage-select">
-                    <option value="">---</option>
-                    <option value="5">5</option>
-                    <option value="9">9</option>
-                    <option value="12">12</option>
-                    <option value="19.5">19.5</option>
-                </select> V
-            </div>
-            <div>
-                <select class="current-select">
-                    <option value="">---</option>
-                    <option value="0.5">0.5</option>
-                    <option value="1.0">1.0</option>
-                    <option value="1.5">1.5</option>
-                    <option value="2.0">2.0</option>
-                    <option value="2.5">2.5</option>
-                    <option value="3.0">3.0</option>
-                    <option value="3.5">3.5</option>
-                    <option value="4.0">4.0</option>
-                </select> A
-            </div>
-            <div><button onclick="calculatePower(2)">Calculate</button></div>
-            <div><input type="text" class="power-field" readonly> W</div>
-        </div>
-        <div class="row" id="row3">
-            <div>Device 3</div>
-            <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-            <div>
-                <select class="voltage-select">
-                    <option value="">---</option>
-                    <option value="5">5</option>
-                    <option value="9">9</option>
-                    <option value="12">12</option>
-                    <option value="19.5">19.5</option>
-                </select> V
-            </div>
-            <div>
-                <select class="current-select">
-                    <option value="">---</option>
-                    <option value="0.5">0.5</option>
-                    <option value="1.0">1.0</option>
-                    <option value="1.5">1.5</option>
-                    <option value="2.0">2.0</option>
-                    <option value="2.5">2.5</option>
-                    <option value="3.0">3.0</option>
-                    <option value="3.5">3.5</option>
-                    <option value="4.0">4.0</option>
-                </select> A
-            </div>
-            <div><button onclick="calculatePower(3)">Calculate</button></div>
-            <div><input type="text" class="power-field" readonly> W</div>
-        </div>
-        <div class="row" id="row4">
-            <div>Device 4</div>
-            <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-            <div>
-                <select class="voltage-select">
-                    <option value="">---</option>
-                    <option value="5">5</option>
-                    <option value="9">9</option>
-                    <option value="12">12</option>
-                    <option value="19.5">19.5</option>
-                </select> V
-            </div>
-            <div>
-                <select class="current-select">
-                    <option value="">---</option>
-                    <option value="0.5">0.5</option>
-                    <option value="1.0">1.0</option>
-                    <option value="1.5">1.5</option>
-                    <option value="2.0">2.0</option>
-                    <option value="2.5">2.5</option>
-                    <option value="3.0">3.0</option>
-                    <option value="3.5">3.5</option>
-                    <option value="4.0">4.0</option>
-                </select> A
-            </div>
-            <div><button onclick="calculatePower(4)">Calculate</button></div>
-            <div><input type="text" class="power-field" readonly> W</div>
-        </div>
+        <div id="rows-container"></div>
         <div class="row total-row">
             <div>Total Power</div>
             <div></div>
@@ -143,7 +31,7 @@
     </div>
 
     <div class="capacity-container">
-        <div>To achive desired time</div>
+        <div>Desired time to work</div>
         <div>
             <select id="desired-time" onchange="calculateCapacity()">
                 <option value="">---</option>
@@ -153,15 +41,10 @@
                 <option value="12">12</option>
                 <option value="16">16</option>
                 <option value="24">24</option>
-            </select> Hours to work
+            </select> Hours
         </div>
-        <div>you need accumulator capacity</div>
-        <div><input type="text" id="required-capacity" readonly> Wh (80% discharge)</div>
-    </div>
-
-    <div class="footer">
-        <div class="logo-small"><img src="/image/greenukr_old.jpg" alt="GreenUkr Logo"></div>
-        <div class="heading-small">Device Power Calculator by GreenUkr</div>
+        <div>Need Capacity</div>
+        <div><input type="text" id="required-capacity" readonly> Wh</div>
     </div>
 
     <script src="script.js"></script>
