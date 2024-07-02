@@ -9,19 +9,17 @@ body {
     width: 90%;
     max-width: 1100px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
 }
 
 .logo, .heading {
-    grid-column: span 6;
     text-align: center;
     margin-bottom: 20px;
 }
 
 .header, .row, .capacity-container {
-    display: contents;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
 }
 
 .header div, .row div, .capacity-container div {

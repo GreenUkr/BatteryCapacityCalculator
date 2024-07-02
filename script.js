@@ -83,7 +83,7 @@ function updateTotalPower() {
     });
 
     document.getElementById('total-power').value = totalPower.toFixed(2);
-    document.getElementById('max-voltage').value = maxVoltage ? `${maxVoltage}V` : '';
+    document.getElementById('max-voltage').value = maxVoltage ? `${maxVoltage} V` : '';
     calculateCapacity(); // Update capacity whenever total power is updated
 }
 
@@ -102,11 +102,6 @@ function calculateCapacity() {
     const requiredCapacity = totalPower * desiredTime;
     requiredCapacityField.value = requiredCapacity.toFixed(2);
 }
-
-// Add event listeners to checkboxes to update total power on change
-document.querySelectorAll('.device-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', updateTotalPower);
-});
 
 // Create rows dynamically
 createRows(4); // You can change the number of rows here
