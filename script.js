@@ -203,6 +203,6 @@ function ceilToCell(requiredEnergy, voltage) {
 } 
   
 // Create rows, capacity container, and battery container dynamically
-createRows(4); // You can change the number of rows here
+createRows(5); // You can change the number of rows here
 createCapacityContainer(); // Create the capacity container
 createBatteryContainer(); // Create the battery container
