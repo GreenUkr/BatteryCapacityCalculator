@@ -1,40 +1,76 @@
+:root {
+    --main-bg-color: white;
+    --power-grid-columns: 5;
+    --total-bg-color: #f4f4f4;
+  }
 body {
-    background-color: white;
+    background-color: var(--main-bg-color);
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 1rem;
 }
 
-.container {
+.container, .menu, .footer {
     width: 90%;
     max-width: 1100px;
     margin: 0 auto;
 }
 
-.logo, .heading {
-    text-align: center;
-    margin-bottom: 20px;
+.menu {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr;
+    color: darkgreen;
+    align-items: center;
 }
 
-/* .header, .row, .energy-container, .battery-container, .power-container {
+.footer {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-} */
+    grid-template-columns: 2fr 2fr 2fr;
+    color: darkgreen;
+}
+
+.logo, .heading {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 1rem;
+    /* align-self: center; */
+}
+
+.switch {
+    /* font-size: large; */
+    text-align: right;
+    margin-bottom: 1rem;
+}
+
+.logo img {
+    width: 10rem;
+}
+
+.logo-small, .heading-small, .buy-me-a-coffee {
+    font-size: small;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.logo-small img {
+    width: 6rem;
+}
+
 .header, .row, .power-container {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(var(--power-grid-columns), 1fr);
+    gap: 0.5rem;
 }
 
 .header div, .row div, .energy-container div, .battery-container div, .power-container div {
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 0.5rem;
     text-align: center;
 }
 
 .header div, .energy-container div, .battery-container div {
-    background-color: #f4f4f4;
+    background-color: var(--total-bg-color);
     font-weight: bold;
 }
 
@@ -49,30 +85,26 @@ button {
 }
 
 .total-row {
-    background-color: #f4f4f4;
+    background-color: var(--total-bg-color);
     font-weight: bold;
 }
 
 .energy-container, .battery-container {
-    width: 90%;
+    width: 96%;
     max-width: 1100px;
-    margin: 20px auto;
+    margin: 1rem auto;
     /* display: grid;
     grid-template-columns: repeat(4, 1fr); */
-    gap: 10px;
-    background-color: #f4f4f4;
+    gap: 0.5rem;
+    background-color: var(--total-bg-color);
 }
+
 .energy-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
 }
+
 .battery-container {
     display: grid;
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: repeat(2, 2fr);
 }
-
-/* .power-container {
-    width: 90%;
-    max-width: 1100px;
-    margin: 20px auto;
-} */

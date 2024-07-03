@@ -1,6 +1,6 @@
 const VOLTAGES = ["5", "9", "12", "19", "24", "36", "48", "56"];
 const CURRENTS = ["0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0"];
-const HOURS = ["4", "6", "8", "12", "16", "24"];
+const HOURS = ["1", "2", "4", "6", "8", "12", "16", "24"];
 const BATTERY_VOLTAGES = ["6", "12", "24", "48"];
 const DISCHARGE = 0.8;
 const INVERTOR_EFFICIENCY = 0.9;
@@ -21,10 +21,9 @@ function createPowerContainer() {
     header.classList.add('header');
     header.innerHTML = `
         <div>Device</div>
-        <div>Use Device</div>
+        <div>Use</div>
         <div>Voltage (V)</div>
         <div>Current (A)</div>
-        <div>Calculate</div>
         <div>Power (W)</div>
     `;
 
@@ -37,7 +36,6 @@ function createPowerContainer() {
         <div>Total Power</div>
         <div></div>
         <div>Max <input type="text" id="max-voltage" readonly></div>
-        <div></div>
         <div></div>
         <div><input type="text" id="total-power" readonly> W</div>
     `;
@@ -58,19 +56,18 @@ function createRows(numberOfRows) {
             <div>Device ${i}</div>
             <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
             <div>
-                <select class="voltage-select">
+                <select class="voltage-select" onchange="calculatePower(${i})">
                     <option value="">---</option>
                     ${voltageOptions}
                 </select> V
             </div>
             <div>
-                <select class="current-select">
+                <select class="current-select" onchange="calculatePower(${i})">
                     <option value="">---</option>
                     ${currentOptions}
                 </select> A
             </div>
-            <div><button onclick="calculatePower(${i})">Calculate</button></div>
-            <div><input type="text" class="power-field" readonly> W</div>
+            <div><input type="text" class="power-field" readonly>W</div>
         `;
 
         rowsContainer.appendChild(row);
