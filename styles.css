@@ -1,7 +1,12 @@
 :root {
     --main-bg-color: white;
-    --power-grid-columns: 5;
     --total-bg-color: #f4f4f4;
+    --border-color: #ccc;
+    --note-text-color: #666;
+    --warning-text-color: red;
+    --menu-text-color: darkgreen;
+    --footer-text-color: darkgreen;
+    --power-grid-columns: 4;
   }
 body {
     background-color: var(--main-bg-color);
@@ -18,15 +23,16 @@ body {
 
 .menu {
     display: grid;
-    grid-template-columns: 2fr 3fr 1fr;
-    color: darkgreen;
+    grid-template-columns: 1fr 3fr 1fr;
+    color: var(--menu-text-color);
     align-items: center;
 }
 
 .footer {
     display: grid;
-    grid-template-columns: 2fr 2fr 2fr;
-    color: darkgreen;
+    grid-template-columns: 2fr 1fr 2fr;
+    color: var(--footer-text-color);
+    align-items: center;
 }
 
 .logo, .heading {
@@ -34,6 +40,7 @@ body {
     font-weight: bold;
     text-align: left;
     margin-bottom: 1rem;
+    margin-left: 1rem;
     /* align-self: center; */
 }
 
@@ -41,6 +48,7 @@ body {
     /* font-size: large; */
     text-align: right;
     margin-bottom: 1rem;
+    margin-right: 1rem;
 }
 
 .logo img {
@@ -64,7 +72,7 @@ body {
 }
 
 .header div, .row div, .energy-container div, .battery-container div, .power-container div {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     padding: 0.5rem;
     text-align: center;
 }
@@ -79,10 +87,10 @@ input[type="text"] {
     text-align: center;
 }
 
-button {
+/* button {
     padding: 0.25rem 0.5rem;
     cursor: pointer;
-}
+} */
 
 .total-row {
     background-color: var(--total-bg-color);
@@ -108,3 +116,31 @@ button {
     display: grid;
     grid-template-columns: repeat(2, 2fr);
 }
+/* .battery-container {
+    margin-top: 20px;
+} */
+
+.battery-header {
+    /* font-size: 18px; */
+    font-weight: bold;
+    /* margin-bottom: 10px; */
+}
+
+.battery-note {
+    font-size: small;
+    color: var(--note-text-color);
+    font-weight: normal;
+    display: block;
+    margin-top: 0.25rem;
+}
+.battery-warning {
+    /* font-size: ; */
+    color: var(--warning-text-color);
+    font-weight: normal;
+    display: block;
+    /* margin-top: 0.25rem; */
+}
+
+/* #battery-recommendations {
+    margin-top: 10px;
+} */
