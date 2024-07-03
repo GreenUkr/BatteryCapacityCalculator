@@ -14,24 +14,65 @@ const voltageOptions = createSelectOptions(VOLTAGES);
 const currentOptions = createSelectOptions(CURRENTS);
 const hoursOptions = createSelectOptions(HOURS);
 
+// function createPowerContainer() {
+//     const powerContainer = document.getElementById('power-container');
+
+//     const header = document.createElement('div');
+//     header.classList.add('header');
+//     header.innerHTML = `
+//         <div>Device</div>
+//         <div>Use</div>
+//         <div>Voltage (V)</div>
+//         <div>Current (A)</div>
+//         <div>Power (W)</div>
+//     `;
+
+//     const rowsContainer = document.createElement('div');
+//     rowsContainer.id = 'rows-container';
+
+//     const totalRow = document.createElement('div');
+//     totalRow.classList.add('row', 'total-row');
+//     totalRow.innerHTML = `
+//         <div>Total Power</div>
+//         <div></div>
+//         <div>Max <input type="text" id="max-voltage" readonly></div>
+//         <div></div>
+//         <div><input type="text" id="total-power" readonly> W</div>
+//     `;
+
+//     powerContainer.appendChild(header);
+//     powerContainer.appendChild(rowsContainer);
+//     powerContainer.appendChild(totalRow);
+// }
+
 function createPowerContainer() {
     const powerContainer = document.getElementById('power-container');
-
-    const header = document.createElement('div');
-    header.classList.add('header');
-    header.innerHTML = `
-        <div>Device</div>
-        <div>Use</div>
-        <div>Voltage (V)</div>
-        <div>Current (A)</div>
-        <div>Power (W)</div>
-    `;
-
+    
+    const fragment = document.createDocumentFragment();
+    
+    fragment.appendChild(createHeader());
+    
     const rowsContainer = document.createElement('div');
     rowsContainer.id = 'rows-container';
+    fragment.appendChild(rowsContainer);
+    
+    fragment.appendChild(createTotalRow());
+    
+    powerContainer.appendChild(fragment);
+}
 
+function createHeader() {
+    const header = document.createElement('div');
+    header.className = 'header';
+    header.innerHTML = [
+        'Device', 'Use', 'Voltage (V)', 'Current (A)', 'Power (W)'
+    ].map(text => `<div>${text}</div>`).join('');
+    return header;
+}
+
+function createTotalRow() {
     const totalRow = document.createElement('div');
-    totalRow.classList.add('row', 'total-row');
+    totalRow.className = 'row total-row';
     totalRow.innerHTML = `
         <div>Total Power</div>
         <div></div>
@@ -39,41 +80,79 @@ function createPowerContainer() {
         <div></div>
         <div><input type="text" id="total-power" readonly> W</div>
     `;
-
-    powerContainer.appendChild(header);
-    powerContainer.appendChild(rowsContainer);
-    powerContainer.appendChild(totalRow);
+    return totalRow;
 }
+
+
+// function createRows(numberOfRows) {
+//     const rowsContainer = document.getElementById('rows-container');
+//     for (let i = 1; i <= numberOfRows; i++) {
+//         const row = document.createElement('div');
+//         row.classList.add('row');
+//         row.id = `row${i}`;
+
+//         row.innerHTML = `
+//             <div>Device ${i}</div>
+//             <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
+//             <div>
+//                 <select class="voltage-select" onchange="calculatePower(${i})">
+//                     <option value="">---</option>
+//                     ${voltageOptions}
+//                 </select> V
+//             </div>
+//             <div>
+//                 <select class="current-select" onchange="calculatePower(${i})">
+//                     <option value="">---</option>
+//                     ${currentOptions}
+//                 </select> A
+//             </div>
+//             <div><input type="text" class="power-field" readonly>W</div>
+//         `;
+
+//         rowsContainer.appendChild(row);
+//     }
+// }
 
 function createRows(numberOfRows) {
     const rowsContainer = document.getElementById('rows-container');
+    const fragment = document.createDocumentFragment();
+
     for (let i = 1; i <= numberOfRows; i++) {
-        const row = document.createElement('div');
-        row.classList.add('row');
-        row.id = `row${i}`;
-
-        row.innerHTML = `
-            <div>Device ${i}</div>
-            <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-            <div>
-                <select class="voltage-select" onchange="calculatePower(${i})">
-                    <option value="">---</option>
-                    ${voltageOptions}
-                </select> V
-            </div>
-            <div>
-                <select class="current-select" onchange="calculatePower(${i})">
-                    <option value="">---</option>
-                    ${currentOptions}
-                </select> A
-            </div>
-            <div><input type="text" class="power-field" readonly>W</div>
-        `;
-
-        rowsContainer.appendChild(row);
+        fragment.appendChild(createRow(i));
     }
+
+    rowsContainer.appendChild(fragment);
 }
 
+function createRow(rowNumber) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.id = `row${rowNumber}`;
+
+    row.innerHTML = `
+        <div>Device ${rowNumber}</div>
+        <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
+        <div>
+            ${createSelect('voltage', rowNumber)}
+        </div>
+        <div>
+            ${createSelect('current', rowNumber)}
+        </div>
+        <div><input type="text" class="power-field" readonly>W</div>
+    `;
+
+    return row;
+}
+
+function createSelect(type, rowNumber) {
+    const options = type === 'voltage' ? voltageOptions : currentOptions;
+    return `
+        <select class="${type}-select" onchange="calculatePower(${rowNumber})">
+            <option value="">---</option>
+            ${options}
+        </select> ${type === 'voltage' ? 'V' : 'A'}
+    `;
+}
 function createCapacityContainer() {
     const capacityContainer = document.getElementById('energy-container');
     const container = document.createElement('div');
