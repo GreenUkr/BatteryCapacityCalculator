@@ -164,28 +164,50 @@ function createRows(numberOfRows) {
             updateDevicesInUse();
             updateMaxVoltage();
             updateTotalPower();
+            calculateEnergy(); // Add this line
         }
     });
 }
 
-function createCapacityContainer() {
+
+function createEnergyContainer() {
     const capacityContainer = document.getElementById('energy-container');
     const container = document.createElement('div');
-    container.classList.add('energy-container');
+    container.className = 'energy-container';
     
     container.innerHTML = `
-        <div>Desired time to work</div>
         <div>
-            <select id="desired-time" onchange="calculateEnergy()">
+            <label for="desired-time">Desired time to work</label>
+            <select id="desired-time">
                 <option value="">---</option>
                 ${hoursOptions}
             </select> Hours
         </div>
-        <div>Required Energy</div>
-        <div><input type="text" id="required-energy" readonly> Wh</div>
+        <div>
+            <span>Required Energy: </span>
+            <span id="required-energy">0</span> Wh
+        </div>
     `;
 
     capacityContainer.appendChild(container);
+
+    // Add event listener for the select
+    document.getElementById('desired-time').addEventListener('change', calculateEnergy);
+}
+
+function calculateEnergy() {
+    const desiredTimeSelect = document.getElementById('desired-time');
+    const requiredEnergySpan = document.getElementById('required-energy');
+    
+    const desiredTime = parseFloat(desiredTimeSelect.value) || 0;
+    const totalPower = parseFloat(document.getElementById('total-power').textContent) || 0;
+    
+    if (desiredTime > 0 && totalPower > 0) {
+        const requiredEnergy = totalPower * desiredTime;
+        requiredEnergySpan.textContent = requiredEnergy.toFixed(2);
+    } else {
+        requiredEnergySpan.textContent = '0';
+    }
 }
 
 function createBatteryContainer() {
@@ -225,23 +247,6 @@ function calculatePower(rowNumber) {
     updateTotalPower();
 }
 
-
-function calculateEnergy() {
-    const totalPower = parseFloat(document.getElementById('total-power').value);
-    const desiredTimeSelect = document.getElementById('desired-time');
-    const desiredTime = parseFloat(desiredTimeSelect.value);
-
-    const requiredEnergyField = document.getElementById('required-energy');
-
-    if (isNaN(totalPower) || isNaN(desiredTime)) {
-        requiredEnergyField.value = '';
-        return;
-    }
-
-    const requiredEnergy = totalPower * desiredTime;
-    requiredEnergyField.value = requiredEnergy.toFixed(2);
-    recommendBattery(); // Update battery recommendation whenever capacity is calculated
-}
 
 function recommendBattery() {
     const maxVoltage = parseFloat(document.getElementById('max-voltage').value);
@@ -304,5 +309,5 @@ function ceilToCell(requiredEnergy, voltage) {
   
 createPowerContainer();
 createRows(4);
-createCapacityContainer();
+createEnergyContainer();
 createBatteryContainer();
