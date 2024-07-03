@@ -40,91 +40,47 @@ function createHeader() {
     return header;
 }
 
-// function createTotalRow() {
-//     const totalRow = document.createElement('div');
-//     totalRow.className = 'row total-row';
-//     totalRow.innerHTML = `
-//         <div>Total Power</div>
-//         <div></div>
-//         <div>Max <input type="text" id="max-voltage" readonly></div>
-//         <div></div>
-//         <div><input type="text" id="total-power" readonly> W</div>
-//     `;
-//     return totalRow;
-// }
-
-
-
-// function createRows(numberOfRows) {
-//     const rowsContainer = document.getElementById('rows-container');
-//     const fragment = document.createDocumentFragment();
-
-//     for (let i = 1; i <= numberOfRows; i++) {
-//         fragment.appendChild(createRow(i));
-//     }
-
-//     rowsContainer.appendChild(fragment);
-// }
-
-// function createRow(rowNumber) {
-//     const row = document.createElement('div');
-//     row.className = 'row';
-//     row.id = `row${rowNumber}`;
-
-//     row.innerHTML = `
-//         <div>Device ${rowNumber}</div>
-//         <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-//         <div>
-//             ${createSelect('voltage', rowNumber)}
-//         </div>
-//         <div>
-//             ${createSelect('current', rowNumber)}
-//         </div>
-//         <div><input type="text" class="power-field" readonly>W</div>
-//     `;
-
-//     return row;
-// }
-
-// refactor
 function createTotalRow() {
     const totalRow = document.createElement('div');
     totalRow.className = 'row total-row';
     totalRow.innerHTML = `
         <div>Total Power</div>
         <div>Devices in use: <span id="devices-in-use">0</span></div>
-        <div>Max <input type="text" id="max-voltage" readonly></div>
+        <div>Max voltage: <span id="max-voltage">0</span> V</div>
         <div></div>
-        <div><input type="text" id="total-power" readonly> W</div>
+        <div>Total power: <span id="total-power">0</span> W</div>
     `;
     return totalRow;
 }
 
+
 function updateDevicesInUse() {
     const checkboxes = document.querySelectorAll('.device-checkbox');
     const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-    const devicesInUseSpan = document.getElementById('devices-in-use');
-    devicesInUseSpan.textContent = checkedCount;
+    document.getElementById('devices-in-use').textContent = checkedCount;
 }
 
-function createRows(numberOfRows) {
-    const rowsContainer = document.getElementById('rows-container');
-    const fragment = document.createDocumentFragment();
 
-    for (let i = 1; i <= numberOfRows; i++) {
-        fragment.appendChild(createRow(i));
-    }
+function updateTotalPower() {
+    const rows = document.querySelectorAll('.row:not(.total-row)');
+    let totalPower = 0;
 
-    rowsContainer.appendChild(fragment);
-
-    // Add event listener to the container for event delegation
-    rowsContainer.addEventListener('change', function(event) {
-        if (event.target.classList.contains('device-checkbox')) {
-            updateDevicesInUse();
-            updateTotalPower(); // Assuming this function exists to update the total power
+    rows.forEach(row => {
+        const isChecked = row.querySelector('.device-checkbox').checked;
+        if (isChecked) {
+            const voltage = parseFloat(row.querySelector('.voltage-select').value) || 0;
+            const current = parseFloat(row.querySelector('.current-select').value) || 0;
+            const power = voltage * current;
+            row.querySelector('.power-field').value = power.toFixed(2);
+            totalPower += power;
+        } else {
+            row.querySelector('.power-field').value = '';
         }
     });
+
+    document.getElementById('total-power').textContent = totalPower.toFixed(2);
 }
+
 
 function createRow(rowNumber) {
     const row = document.createElement('div');
@@ -140,30 +96,78 @@ function createRow(rowNumber) {
         <div>
             ${createSelect('current', rowNumber)}
         </div>
-        <div><input type="text" class="power-field" readonly>W</div>
+        <div><span class="power-field">0</span> W</div>
     `;
 
     return row;
 }
 
-// ... rest of the code remains the same
-
-
-// end refactor
-
-
-
-
-
 function createSelect(type, rowNumber) {
     const options = type === 'voltage' ? voltageOptions : currentOptions;
     return `
-        <select class="${type}-select" onchange="calculatePower(${rowNumber})">
+        <select class="${type}-select">
             <option value="">---</option>
             ${options}
         </select> ${type === 'voltage' ? 'V' : 'A'}
     `;
 }
+
+function updateMaxVoltage() {
+    const rows = document.querySelectorAll('.row:not(.total-row)');
+    const voltages = Array.from(rows)
+        .filter(row => row.querySelector('.device-checkbox').checked)
+        .map(row => parseFloat(row.querySelector('.voltage-select').value) || 0)
+        .filter(voltage => voltage > 0);
+
+    const maxVoltage = voltages.length > 0 ? Math.max(...voltages) : 0;
+    document.getElementById('max-voltage').textContent = maxVoltage.toFixed(2);
+}
+
+
+function updateTotalPower() {
+    const rows = document.querySelectorAll('.row:not(.total-row)');
+    let totalPower = 0;
+
+    rows.forEach(row => {
+        const isChecked = row.querySelector('.device-checkbox').checked;
+        const powerField = row.querySelector('.power-field');
+
+        if (isChecked) {
+            const voltage = parseFloat(row.querySelector('.voltage-select').value) || 0;
+            const current = parseFloat(row.querySelector('.current-select').value) || 0;
+            const power = voltage * current;
+            powerField.textContent = power.toFixed(2);
+            totalPower += power;
+        } else {
+            powerField.textContent = '0';
+        }
+    });
+
+    document.getElementById('total-power').textContent = totalPower.toFixed(2);
+}
+
+function createRows(numberOfRows) {
+    const rowsContainer = document.getElementById('rows-container');
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 1; i <= numberOfRows; i++) {
+        fragment.appendChild(createRow(i));
+    }
+
+    rowsContainer.appendChild(fragment);
+
+    // Add event listener to the container for event delegation
+    rowsContainer.addEventListener('change', function(event) {
+        if (event.target.classList.contains('device-checkbox') ||
+            event.target.classList.contains('voltage-select') ||
+            event.target.classList.contains('current-select')) {
+            updateDevicesInUse();
+            updateMaxVoltage();
+            updateTotalPower();
+        }
+    });
+}
+
 function createCapacityContainer() {
     const capacityContainer = document.getElementById('energy-container');
     const container = document.createElement('div');
@@ -221,35 +225,6 @@ function calculatePower(rowNumber) {
     updateTotalPower();
 }
 
-function updateTotalPower() {
-    const rows = document.querySelectorAll('.row');
-    let totalPower = 0;
-    let maxVoltage = 0;
-
-    rows.forEach(row => {
-        if (!row.classList.contains('total-row')) {
-            const checkbox = row.querySelector('.device-checkbox');
-            const voltageSelect = row.querySelector('.voltage-select');
-            const powerField = row.querySelector('.power-field');
-            const power = parseFloat(powerField.value);
-            const voltage = parseFloat(voltageSelect.value);
-
-            if (checkbox.checked) {
-                if (!isNaN(power)) {
-                    totalPower += power;
-                }
-                if (!isNaN(voltage) && voltage > maxVoltage) {
-                    maxVoltage = voltage;
-                }
-            }
-        }
-    });
-
-    document.getElementById('total-power').value = totalPower.toFixed(2);
-    document.getElementById('max-voltage').value = maxVoltage ? `${maxVoltage} V` : '';
-    calculateEnergy(); // Update capacity whenever total power is updated
-    recommendBattery(); // Update battery recommendation whenever total power is updated
-}
 
 function calculateEnergy() {
     const totalPower = parseFloat(document.getElementById('total-power').value);
