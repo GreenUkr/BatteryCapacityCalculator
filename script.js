@@ -285,13 +285,20 @@ function updateBatteryRecommendations() {
     batteryRecommendations.innerHTML = recommendedCapacities.join('<br>');
 }
 
+/**
+ * Calculates the capacity in mAh based on the required energy and battery voltage.
+ *
+ * @param {number} requiredEnergy - The amount of required energy.
+ * @param {number} batteryVoltage - The voltage of the battery.
+ * @return {number} The calculated capacity in mAh.
+ */
 function ceilToCell(requiredEnergy, batteryVoltage) {
     if (typeof requiredEnergy !== 'number' || typeof batteryVoltage !== 'number') {
       return 0;
     }
     const capacity = requiredEnergy / (batteryVoltage * DISCHARGE) * 1000; // Capacity in mAh
     return Math.ceil(capacity / 100) * 100;
-  }
+}
 // End Battery grid section
   
 createPowerContainer();
