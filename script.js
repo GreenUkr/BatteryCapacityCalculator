@@ -144,6 +144,7 @@ function updateTotalPower() {
     });
 
     document.getElementById('total-power').textContent = totalPower.toFixed(2);
+    recommendBattery(); // Add this line
 }
 
 function createRows(numberOfRows) {
@@ -167,6 +168,26 @@ function createRows(numberOfRows) {
             calculateEnergy(); // Add this line
         }
     });
+}
+
+function calculatePower(rowNumber) {
+    const row = document.getElementById(`row${rowNumber}`);
+    const voltageSelect = row.querySelector('.voltage-select');
+    const currentSelect = row.querySelector('.current-select');
+    const powerField = row.querySelector('.power-field');
+
+    const voltage = parseFloat(voltageSelect.value);
+    const current = parseFloat(currentSelect.value);
+
+    if (isNaN(voltage) || isNaN(current)) {
+        powerField.value = '';
+        updateTotalPower();
+        return;
+    }
+
+    const power = voltage * current;
+    powerField.value = power.toFixed(2);
+    updateTotalPower();
 }
 
 
@@ -205,57 +226,134 @@ function calculateEnergy() {
     if (desiredTime > 0 && totalPower > 0) {
         const requiredEnergy = totalPower * desiredTime;
         requiredEnergySpan.textContent = requiredEnergy.toFixed(2);
+        // recommendBattery(); // Add this line
     } else {
         requiredEnergySpan.textContent = '0';
     }
+    recommendBattery(); // Add this line
 }
 
+// function createBatteryContainer() {
+//     const batteryContainer = document.getElementById('battery-container');
+//     const container = document.createElement('div');
+//     container.classList.add('battery-container');
+    
+//     const title = document.createElement('div');
+//     title.textContent = 'Recommended Battery (80% discharge)';
+    
+//     const recommendations = document.createElement('div');
+//     recommendations.id = 'battery-recommendations';
+    
+//     container.appendChild(title);
+//     container.appendChild(recommendations);
+    
+//     batteryContainer.appendChild(container);
+// }
+
+// function calculatePower(rowNumber) {
+//     const row = document.getElementById(`row${rowNumber}`);
+//     const voltageSelect = row.querySelector('.voltage-select');
+//     const currentSelect = row.querySelector('.current-select');
+//     const powerField = row.querySelector('.power-field');
+
+//     const voltage = parseFloat(voltageSelect.value);
+//     const current = parseFloat(currentSelect.value);
+
+//     if (isNaN(voltage) || isNaN(current)) {
+//         powerField.value = '';
+//         updateTotalPower();
+//         return;
+//     }
+
+//     const power = voltage * current;
+//     powerField.value = power.toFixed(2);
+//     updateTotalPower();
+// }
+
+
+// function recommendBattery() {
+//     const maxVoltage = parseFloat(document.getElementById('max-voltage').value);
+//     const totalPower = parseFloat(document.getElementById('total-power').value);
+//     const requiredEnergy = parseFloat(document.getElementById('required-energy').value);
+//     const batteryRecommendations = document.getElementById('battery-recommendations');
+
+//     if (isNaN(maxVoltage) || isNaN(requiredEnergy)) {
+//         batteryRecommendations.innerHTML = '';
+//         return;
+//     }
+
+//     let closestLowerVoltage = null;
+//     let closestHigherVoltage = null;
+
+//     for (const voltage of BATTERY_VOLTAGES) {
+//         const v = parseFloat(voltage);
+//         if (v < maxVoltage) {
+//             // Find the closest voltage less than maxVoltage
+//             closestLowerVoltage = v;
+//         } else if (v > maxVoltage && (closestHigherVoltage === null || v < closestHigherVoltage)) {
+//             // Find the next closest voltage greater than maxVoltage
+//             closestHigherVoltage = v;
+//         }
+//     }
+
+//     const recommendedCapacities = [];
+//     if (closestLowerVoltage === null) {
+//         recommendedCapacities.push('StepUp Invertor: No suitable lower voltage found');
+//     } else {
+//         const lowerCapacity = ceilToCell(requiredEnergy, closestLowerVoltage);
+//         const lowerCurrent = ((totalPower / closestLowerVoltage) / INVERTOR_EFFICIENCY).toFixed(2);
+//         recommendedCapacities.push(`StepUp Invertor: Battery ${closestLowerVoltage}V - ${lowerCurrent}A: ${lowerCapacity} mAh`);
+//     }
+
+//     // Check if maxVoltage itself exists in BATTERY_VOLTAGES
+//     if (BATTERY_VOLTAGES.includes(maxVoltage.toString())) {
+//         const exactCapacity = ceilToCell(requiredEnergy, maxVoltage);
+//         const exactCurrent = ((totalPower / maxVoltage) / INVERTOR_EFFICIENCY).toFixed(2);
+//         recommendedCapacities.push(`StepDown Invertor: Battery ${maxVoltage}V - ${exactCurrent}A: ${exactCapacity} mAh`);
+//     } else if (closestHigherVoltage !== null) {
+//         const higherCapacity = ceilToCell(requiredEnergy, closestHigherVoltage);
+//         const higherCurrent = ((totalPower / closestHigherVoltage) / INVERTOR_EFFICIENCY).toFixed(2);
+//         recommendedCapacities.push(`StepDown Invertor: Battery ${closestHigherVoltage}V - ${higherCurrent}A: ${higherCapacity} mAh`);
+//     } else {
+//         recommendedCapacities.push('StepDown Invertor: No suitable higher voltage found');
+//     }
+
+//     batteryRecommendations.innerHTML = recommendedCapacities.join('<br>');
+// }
+
+// function ceilToCell(requiredEnergy, voltage) {
+//     if (isNaN(voltage) || isNaN(requiredEnergy)) {
+//         return 0;
+//     }
+//     // const capacity = (requiredEnergy / voltage) * 1.25 * 1000;
+//     const capacity = (requiredEnergy / voltage) / DISCHARGE * 1000;
+//     return Math.ceil(capacity / 100) * 100;
+// }
+  
 function createBatteryContainer() {
     const batteryContainer = document.getElementById('battery-container');
     const container = document.createElement('div');
-    container.classList.add('battery-container');
+    container.className = 'battery-container';
     
-    const title = document.createElement('div');
-    title.textContent = 'Recommended Battery (80% discharge)';
-    
-    const recommendations = document.createElement('div');
-    recommendations.id = 'battery-recommendations';
-    
-    container.appendChild(title);
-    container.appendChild(recommendations);
+    container.innerHTML = `
+        <div>Recommended Battery (${(DISCHARGE * 100).toFixed(0)}% discharge)</div>
+        <div id="battery-recommendations"></div>
+    `;
     
     batteryContainer.appendChild(container);
+
+    // Initialize battery recommendations
+    recommendBattery();
 }
-
-function calculatePower(rowNumber) {
-    const row = document.getElementById(`row${rowNumber}`);
-    const voltageSelect = row.querySelector('.voltage-select');
-    const currentSelect = row.querySelector('.current-select');
-    const powerField = row.querySelector('.power-field');
-
-    const voltage = parseFloat(voltageSelect.value);
-    const current = parseFloat(currentSelect.value);
-
-    if (isNaN(voltage) || isNaN(current)) {
-        powerField.value = '';
-        updateTotalPower();
-        return;
-    }
-
-    const power = voltage * current;
-    powerField.value = power.toFixed(2);
-    updateTotalPower();
-}
-
 
 function recommendBattery() {
-    const maxVoltage = parseFloat(document.getElementById('max-voltage').value);
-    const totalPower = parseFloat(document.getElementById('total-power').value);
-    const requiredEnergy = parseFloat(document.getElementById('required-energy').value);
+    const maxVoltage = parseFloat(document.getElementById('max-voltage').textContent);
+    const totalPower = parseFloat(document.getElementById('total-power').textContent);
+    const requiredEnergy = parseFloat(document.getElementById('required-energy').textContent);
     const batteryRecommendations = document.getElementById('battery-recommendations');
 
-    if (isNaN(maxVoltage) || isNaN(requiredEnergy)) {
-        batteryRecommendations.innerHTML = '';
+    if (maxVoltage <= 0 || requiredEnergy <= 0 || totalPower <= 0) {
+        batteryRecommendations.innerHTML = 'Please select devices, desired work time, and ensure power is calculated to get battery recommendations.';
         return;
     }
 
@@ -265,10 +363,8 @@ function recommendBattery() {
     for (const voltage of BATTERY_VOLTAGES) {
         const v = parseFloat(voltage);
         if (v < maxVoltage) {
-            // Find the closest voltage less than maxVoltage
             closestLowerVoltage = v;
         } else if (v > maxVoltage && (closestHigherVoltage === null || v < closestHigherVoltage)) {
-            // Find the next closest voltage greater than maxVoltage
             closestHigherVoltage = v;
         }
     }
@@ -282,7 +378,6 @@ function recommendBattery() {
         recommendedCapacities.push(`StepUp Invertor: Battery ${closestLowerVoltage}V - ${lowerCurrent}A: ${lowerCapacity} mAh`);
     }
 
-    // Check if maxVoltage itself exists in BATTERY_VOLTAGES
     if (BATTERY_VOLTAGES.includes(maxVoltage.toString())) {
         const exactCapacity = ceilToCell(requiredEnergy, maxVoltage);
         const exactCurrent = ((totalPower / maxVoltage) / INVERTOR_EFFICIENCY).toFixed(2);
@@ -302,11 +397,12 @@ function ceilToCell(requiredEnergy, voltage) {
     if (isNaN(voltage) || isNaN(requiredEnergy)) {
         return 0;
     }
-    // const capacity = (requiredEnergy / voltage) * 1.25 * 1000;
     const capacity = (requiredEnergy / voltage) / DISCHARGE * 1000;
     return Math.ceil(capacity / 100) * 100;
 }
-  
+
+
+
 createPowerContainer();
 createRows(4);
 createEnergyContainer();
