@@ -4,10 +4,12 @@
     --border-color: #ccc;
     --note-text-color: #666;
     --warning-text-color: red;
-    --menu-text-color: darkgreen;
-    --footer-text-color: darkgreen;
+    --total-digits-color: RoyalBlue;
+    --menu-text-color: DarkGreen;
+    --footer-text-color: DarkGreen;
     --power-grid-columns: 4;
   }
+
 body {
     background-color: var(--main-bg-color);
     font-family: Arial, sans-serif;
@@ -24,14 +26,14 @@ body {
 .menu {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    color: var(--menu-text-color);
+    color: var(--menu-text-color, darkgreen);
     align-items: center;
 }
 
 .footer {
     display: grid;
     grid-template-columns: 2fr 1fr 2fr;
-    color: var(--footer-text-color);
+    color: var(--footer-text-color, darkgreen);
     align-items: center;
 }
 
@@ -39,7 +41,7 @@ body {
     font-size: x-large;
     font-weight: bold;
     text-align: left;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     margin-left: 1rem;
     /* align-self: center; */
 }
@@ -47,7 +49,7 @@ body {
 .switch {
     /* font-size: large; */
     text-align: right;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     margin-right: 1rem;
 }
 
@@ -71,10 +73,27 @@ body {
     gap: 0.5rem;
 }
 
-.header div, .row div, .energy-container div, .battery-container div, .power-container div {
+.header div, .row div, .power-container div, .energy-container div, .battery-container div {
     border: 1px solid var(--border-color);
     padding: 0.5rem;
     text-align: center;
+}
+
+.power-info {
+    grid-column: 1 / span var(--power-grid-columns);
+    text-align: left;
+    text-indent: 1rem;
+    font-size: small;
+    color: var(--note-text-color, #666);
+    margin: 0 1rem 0.5rem 1rem;
+}
+
+.power-info p {
+    margin: 0;
+}
+
+.info-bold {
+    font-weight: bold;
 }
 
 .header div, .energy-container div, .battery-container div {
@@ -87,18 +106,18 @@ input[type="text"] {
     text-align: center;
 }
 
-/* button {
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
-} */
-
 .total-row {
     background-color: var(--total-bg-color);
     font-weight: bold;
 }
 
+#devices-in-use, #max-voltage, #total-power, #required-energy {
+    font-weight: bold;
+    color: var(--total-digits-color);
+}
+
 .energy-container, .battery-container {
-    width: 96%;
+    /* width: 96%; */
     max-width: 1100px;
     margin: 1rem auto;
     /* display: grid;
@@ -135,7 +154,7 @@ input[type="text"] {
 }
 .battery-warning {
     /* font-size: ; */
-    color: var(--warning-text-color);
+    color: var(--warning-text-color, red);
     font-weight: normal;
     display: block;
     /* margin-top: 0.25rem; */

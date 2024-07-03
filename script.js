@@ -19,9 +19,11 @@ const hoursOptions = createSelectOptions(HOURS);
 // Power grid section
 function createPowerContainer() {
     const powerContainer = document.getElementById('power-container');
-    
+  
     const fragment = document.createDocumentFragment();
-    
+
+    fragment.appendChild(createPowerInfo());
+
     fragment.appendChild(createHeaderRow());
     
     const rowsContainer = document.createElement('div');
@@ -31,6 +33,35 @@ function createPowerContainer() {
     fragment.appendChild(createTotalRow());
     
     powerContainer.appendChild(fragment);
+}
+
+function createPowerInfo() {
+    const powerInfo = document.createElement('div');
+    powerInfo.className = 'power-info';
+    powerInfo.id = `power-usage-info`;
+
+    powerInfo.innerHTML = `
+        <p><span class="info-bold">How to Use the Grid:</span></p>
+        <p>1. <span class="info-bold">Select Voltage and Current:</span> 
+        Choose the voltage and current ratings of your devices.</p> 
+        <p>2. <span class="info-bold">Check Devices for Calculation:</span> 
+        Select the devices you want to include in the calculations. 
+        Only checked devices will be used to update the Max Voltage and Total Power.</p>
+        <p>3. <span class="info-bold">Unchecking Removes from Calculation:</span> 
+        Unchecking a device will exclude it 
+        from the calculations, even if voltage and current are selected.</p>
+        <p>4. <span class="info-bold">Recalculate on Voltage/Current Change:</span> 
+        If you change the voltage or current values for checked devices, 
+        the Max Voltage and Total Power will be automatically recalculated.</p>
+        <p>5. <span class="info-bold">Select Desired Operating Time:</span> 
+        Enter the desired operating time (in hours) for your devices. 
+        This will update the Desired Energy and Battery Recommendations.</p>
+        <p>6. <span class="info-bold">Recalculate on Time Change:</span> 
+        Changing the desired operating time will automatically update 
+        the Desired Energy and Battery Recommendations.</p>
+    `;
+
+    return powerInfo;
 }
 
 function createHeaderRow() {
@@ -71,12 +102,12 @@ function createRow(rowNumber) {
     row.id = `row${rowNumber}`;
 
     row.innerHTML = `
-        <div>Device ${rowNumber} <input type="checkbox" class="device-checkbox"></div>
+        <div>Device ${rowNumber} <input type="checkbox" id="device${rowNumber}" class="device-checkbox"></div>
         <div>
-            ${createSelect('voltage')}
+            ${createSelect('voltage', rowNumber)}
         </div>
         <div>
-            ${createSelect('current')}
+            ${createSelect('current', rowNumber)}
         </div>
         <div><span class="power-field">0</span> W</div>
     `;
@@ -84,10 +115,10 @@ function createRow(rowNumber) {
     return row;
 }
 
-function createSelect(type) {
+function createSelect(type, rowNumber) {
     const options = type === 'voltage' ? voltageOptions : currentOptions;
     return `
-        <select class="${type}-select">
+        <select id="${type}-select-${rowNumber}" class="${type}-select">
             <option value="">---</option>
             ${options}
         </select> ${type === 'voltage' ? 'V' : 'A'}
