@@ -14,36 +14,6 @@ const voltageOptions = createSelectOptions(VOLTAGES);
 const currentOptions = createSelectOptions(CURRENTS);
 const hoursOptions = createSelectOptions(HOURS);
 
-// function createPowerContainer() {
-//     const powerContainer = document.getElementById('power-container');
-
-//     const header = document.createElement('div');
-//     header.classList.add('header');
-//     header.innerHTML = `
-//         <div>Device</div>
-//         <div>Use</div>
-//         <div>Voltage (V)</div>
-//         <div>Current (A)</div>
-//         <div>Power (W)</div>
-//     `;
-
-//     const rowsContainer = document.createElement('div');
-//     rowsContainer.id = 'rows-container';
-
-//     const totalRow = document.createElement('div');
-//     totalRow.classList.add('row', 'total-row');
-//     totalRow.innerHTML = `
-//         <div>Total Power</div>
-//         <div></div>
-//         <div>Max <input type="text" id="max-voltage" readonly></div>
-//         <div></div>
-//         <div><input type="text" id="total-power" readonly> W</div>
-//     `;
-
-//     powerContainer.appendChild(header);
-//     powerContainer.appendChild(rowsContainer);
-//     powerContainer.appendChild(totalRow);
-// }
 
 function createPowerContainer() {
     const powerContainer = document.getElementById('power-container');
@@ -70,12 +40,59 @@ function createHeader() {
     return header;
 }
 
+// function createTotalRow() {
+//     const totalRow = document.createElement('div');
+//     totalRow.className = 'row total-row';
+//     totalRow.innerHTML = `
+//         <div>Total Power</div>
+//         <div></div>
+//         <div>Max <input type="text" id="max-voltage" readonly></div>
+//         <div></div>
+//         <div><input type="text" id="total-power" readonly> W</div>
+//     `;
+//     return totalRow;
+// }
+
+
+
+// function createRows(numberOfRows) {
+//     const rowsContainer = document.getElementById('rows-container');
+//     const fragment = document.createDocumentFragment();
+
+//     for (let i = 1; i <= numberOfRows; i++) {
+//         fragment.appendChild(createRow(i));
+//     }
+
+//     rowsContainer.appendChild(fragment);
+// }
+
+// function createRow(rowNumber) {
+//     const row = document.createElement('div');
+//     row.className = 'row';
+//     row.id = `row${rowNumber}`;
+
+//     row.innerHTML = `
+//         <div>Device ${rowNumber}</div>
+//         <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
+//         <div>
+//             ${createSelect('voltage', rowNumber)}
+//         </div>
+//         <div>
+//             ${createSelect('current', rowNumber)}
+//         </div>
+//         <div><input type="text" class="power-field" readonly>W</div>
+//     `;
+
+//     return row;
+// }
+
+// refactor
 function createTotalRow() {
     const totalRow = document.createElement('div');
     totalRow.className = 'row total-row';
     totalRow.innerHTML = `
         <div>Total Power</div>
-        <div></div>
+        <div>Devices in use: <span id="devices-in-use">0</span></div>
         <div>Max <input type="text" id="max-voltage" readonly></div>
         <div></div>
         <div><input type="text" id="total-power" readonly> W</div>
@@ -83,35 +100,12 @@ function createTotalRow() {
     return totalRow;
 }
 
-
-// function createRows(numberOfRows) {
-//     const rowsContainer = document.getElementById('rows-container');
-//     for (let i = 1; i <= numberOfRows; i++) {
-//         const row = document.createElement('div');
-//         row.classList.add('row');
-//         row.id = `row${i}`;
-
-//         row.innerHTML = `
-//             <div>Device ${i}</div>
-//             <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
-//             <div>
-//                 <select class="voltage-select" onchange="calculatePower(${i})">
-//                     <option value="">---</option>
-//                     ${voltageOptions}
-//                 </select> V
-//             </div>
-//             <div>
-//                 <select class="current-select" onchange="calculatePower(${i})">
-//                     <option value="">---</option>
-//                     ${currentOptions}
-//                 </select> A
-//             </div>
-//             <div><input type="text" class="power-field" readonly>W</div>
-//         `;
-
-//         rowsContainer.appendChild(row);
-//     }
-// }
+function updateDevicesInUse() {
+    const checkboxes = document.querySelectorAll('.device-checkbox');
+    const checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+    const devicesInUseSpan = document.getElementById('devices-in-use');
+    devicesInUseSpan.textContent = checkedCount;
+}
 
 function createRows(numberOfRows) {
     const rowsContainer = document.getElementById('rows-container');
@@ -122,6 +116,14 @@ function createRows(numberOfRows) {
     }
 
     rowsContainer.appendChild(fragment);
+
+    // Add event listener to the container for event delegation
+    rowsContainer.addEventListener('change', function(event) {
+        if (event.target.classList.contains('device-checkbox')) {
+            updateDevicesInUse();
+            updateTotalPower(); // Assuming this function exists to update the total power
+        }
+    });
 }
 
 function createRow(rowNumber) {
@@ -131,7 +133,7 @@ function createRow(rowNumber) {
 
     row.innerHTML = `
         <div>Device ${rowNumber}</div>
-        <div><input type="checkbox" class="device-checkbox" onchange="updateTotalPower()"></div>
+        <div><input type="checkbox" class="device-checkbox"></div>
         <div>
             ${createSelect('voltage', rowNumber)}
         </div>
@@ -143,6 +145,15 @@ function createRow(rowNumber) {
 
     return row;
 }
+
+// ... rest of the code remains the same
+
+
+// end refactor
+
+
+
+
 
 function createSelect(type, rowNumber) {
     const options = type === 'voltage' ? voltageOptions : currentOptions;
