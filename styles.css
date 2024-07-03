@@ -16,13 +16,18 @@ body {
     margin-bottom: 20px;
 }
 
-.header, .row, .energy-container, .battery-container {
+/* .header, .row, .energy-container, .battery-container, .power-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+} */
+.header, .row, .power-container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 10px;
 }
 
-.header div, .row div, .energy-container div, .battery-container div {
+.header div, .row div, .energy-container div, .battery-container div, .power-container div {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
@@ -44,25 +49,30 @@ button {
 }
 
 .total-row {
+    background-color: #f4f4f4;
     font-weight: bold;
 }
 
-.energy-container {
+.energy-container, .battery-container {
     width: 90%;
     max-width: 1100px;
     margin: 20px auto;
+    /* display: grid;
+    grid-template-columns: repeat(4, 1fr); */
+    gap: 10px;
+    background-color: #f4f4f4;
+}
+.energy-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    background-color: #f4f4f4;
+}
+.battery-container {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
 }
 
-.battery-container {
+/* .power-container {
     width: 90%;
     max-width: 1100px;
     margin: 20px auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    background-color: #f4f4f4;
-}
+} */
