@@ -113,7 +113,7 @@ input[type="text"] {
 
 #devices-in-use, #max-voltage, #total-power, #required-energy {
     font-weight: bold;
-    color: var(--total-digits-color);
+    color: var(--total-digits-color, RoyalBlue);
 }
 
 .energy-container, .battery-container {
@@ -123,7 +123,7 @@ input[type="text"] {
     /* display: grid;
     grid-template-columns: repeat(4, 1fr); */
     gap: 0.5rem;
-    background-color: var(--total-bg-color);
+    background-color: var(--total-bg-color, #f4f4f4);
 }
 
 .energy-container {
@@ -147,7 +147,7 @@ input[type="text"] {
 
 .battery-note {
     font-size: small;
-    color: var(--note-text-color);
+    color: var(--note-text-color, #666);
     font-weight: normal;
     display: block;
     margin-top: 0.25rem;
