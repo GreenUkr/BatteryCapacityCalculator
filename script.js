@@ -276,13 +276,48 @@ function updateBatteryRecommendations() {
                 Please select devices, desired work time, and ensure total power \
                 is calculated to get battery recommendations.
             </span>
-            `;
+        `;
         return;
     }
 
+    const { lowerVoltageCapacity, higherVoltageCapacity } = updateBattery(maxVoltage, totalPower, requiredEnergy);
+
+    batteryRecommendations.innerHTML = `
+        <div class="battery-grid">
+            <!-- <div class="grid-header">Type</div>
+            <div class="grid-header">Voltage</div>
+            <div class="grid-header">Current</div>
+            <div class="grid-header">Capacity</div>
+            
+            <div class="grid-header">Type</div>
+            <div class="grid-header">V</div>
+            <div class="grid-header">A</div>
+            <div class="grid-header">mAh</div>
+            -->
+            <div>Up</div>
+            ${lowerVoltageCapacity ? `
+                <div>${lowerVoltageCapacity.voltage}V</div>
+                <div>${lowerVoltageCapacity.current}A</div>
+                <div class="battery-capacity">${lowerVoltageCapacity.capacity}mAh</div>
+            ` : `
+                <div class="span-3">No suitable lower voltage found</div>
+            `}
+
+            <div>Down</div>
+            ${higherVoltageCapacity ? `
+                <div>${higherVoltageCapacity.voltage}V</div>
+                <div>${higherVoltageCapacity.current}A</div>
+                <div class="battery-capacity">${higherVoltageCapacity.capacity}mAh</div>
+            ` : `
+                <div class="span-3">No suitable higher voltage found</div>
+            `}
+        </div>
+    `;
+}
+
+function updateBattery(maxVoltage, totalPower, requiredEnergy) {
     let closestLowerVoltage = null;
     let closestHigherVoltage = null;
-
     for (const voltage of BATTERY_VOLTAGES) {
         const v = parseFloat(voltage);
         if (v < maxVoltage) {
@@ -292,28 +327,38 @@ function updateBatteryRecommendations() {
         }
     }
 
-    const recommendedCapacities = [];
-    if (closestLowerVoltage === null) {
-        recommendedCapacities.push('StepUp Inverter: No suitable lower voltage found');
-    } else {
+    let lowerVoltageCapacity = null;
+    let higherVoltageCapacity = null;
+
+    if (closestLowerVoltage !== null) {
         const lowerCapacity = ceilToCell(requiredEnergy, closestLowerVoltage);
         const lowerCurrent = (totalPower / (closestLowerVoltage * INVERTER_EFFICIENCY)).toFixed(2);
-        recommendedCapacities.push(`StepUp Inverter: Battery ${closestLowerVoltage}V - ${lowerCurrent}A: ${lowerCapacity} mAh`);
+        lowerVoltageCapacity = {
+            voltage: closestLowerVoltage,
+            current: lowerCurrent,
+            capacity: lowerCapacity
+        };
     }
 
     if (BATTERY_VOLTAGES.includes(maxVoltage.toString())) {
         const exactCapacity = ceilToCell(requiredEnergy, maxVoltage);
         const exactCurrent = (totalPower / (maxVoltage * INVERTER_EFFICIENCY)).toFixed(2);
-        recommendedCapacities.push(`StepDown Inverter: Battery ${maxVoltage}V - ${exactCurrent}A: ${exactCapacity} mAh`);
+        higherVoltageCapacity = {
+            voltage: maxVoltage,
+            current: exactCurrent,
+            capacity: exactCapacity
+        };
     } else if (closestHigherVoltage !== null) {
         const higherCapacity = ceilToCell(requiredEnergy, closestHigherVoltage);
         const higherCurrent = (totalPower / (closestHigherVoltage * INVERTER_EFFICIENCY)).toFixed(2);
-        recommendedCapacities.push(`StepDown Inverter: Battery ${closestHigherVoltage}V - ${higherCurrent}A: ${higherCapacity} mAh`);
-    } else {
-        recommendedCapacities.push('StepDown Inverter: No suitable higher voltage found');
+        higherVoltageCapacity = {
+            voltage: closestHigherVoltage,
+            current: higherCurrent,
+            capacity: higherCapacity
+        };
     }
 
-    batteryRecommendations.innerHTML = recommendedCapacities.join('<br>');
+    return { lowerVoltageCapacity, higherVoltageCapacity };
 }
 
 /**

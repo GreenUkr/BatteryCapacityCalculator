@@ -1,0 +1,54 @@
+Hello. I have a js function
+function updateBatteryRecommendations() {
+    const maxVoltage = parseFloat(document.getElementById('max-voltage').textContent);
+    const totalPower = parseFloat(document.getElementById('total-power').textContent);
+    const requiredEnergy = parseFloat(document.getElementById('required-energy').textContent);
+    const batteryRecommendations = document.getElementById('battery-recommendations');
+
+    if (maxVoltage <= 0 || requiredEnergy <= 0 || totalPower <= 0) {
+        batteryRecommendations.innerHTML = `
+            <span class="battery-warning">
+                Please select devices, desired work time, and ensure total power \
+                is calculated to get battery recommendations.
+            </span>
+            `;
+        return;
+    }
+
+    let closestLowerVoltage = null;
+    let closestHigherVoltage = null;
+
+    for (const voltage of BATTERY_VOLTAGES) {
+        const v = parseFloat(voltage);
+        if (v < maxVoltage) {
+            closestLowerVoltage = v;
+        } else if (v > maxVoltage && (closestHigherVoltage === null || v < closestHigherVoltage)) {
+            closestHigherVoltage = v;
+        }
+    }
+
+    const recommendedCapacities = [];
+    if (closestLowerVoltage === null) {
+        recommendedCapacities.push('StepUp Inverter: No suitable lower voltage found');
+    } else {
+        const lowerCapacity = ceilToCell(requiredEnergy, closestLowerVoltage);
+        const lowerCurrent = (totalPower / (closestLowerVoltage * INVERTER_EFFICIENCY)).toFixed(2);
+        recommendedCapacities.push(`StepUp Inverter: Battery ${closestLowerVoltage}V - ${lowerCurrent}A: ${lowerCapacity} mAh`);
+    }
+
+    if (BATTERY_VOLTAGES.includes(maxVoltage.toString())) {
+        const exactCapacity = ceilToCell(requiredEnergy, maxVoltage);
+        const exactCurrent = (totalPower / (maxVoltage * INVERTER_EFFICIENCY)).toFixed(2);
+        recommendedCapacities.push(`StepDown Inverter: Battery ${maxVoltage}V - ${exactCurrent}A: ${exactCapacity} mAh`);
+    } else if (closestHigherVoltage !== null) {
+        const higherCapacity = ceilToCell(requiredEnergy, closestHigherVoltage);
+        const higherCurrent = (totalPower / (closestHigherVoltage * INVERTER_EFFICIENCY)).toFixed(2);
+        recommendedCapacities.push(`StepDown Inverter: Battery ${closestHigherVoltage}V - ${higherCurrent}A: ${higherCapacity} mAh`);
+    } else {
+        recommendedCapacities.push('StepDown Inverter: No suitable higher voltage found');
+    }
+
+    batteryRecommendations.innerHTML = recommendedCapacities.join('<br>');
+}
+which calculate  battary capacity for (lower and higher voltages - exact is a variant of higher in this logic) and generate html code to show it. 
+i need divide this function to two. Parent one to generate html and  doughter (name updateBattery() ) to for calculation. ipdateBattery() function gets  maxVoltage, totalPower and requiredEnergy as arguments and return two values lowerVoltageCapacity and higherVoltageCapacity which will be used in html genetation part of parent function.
