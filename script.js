@@ -1,6 +1,6 @@
 // Constants section
 const VOLTAGES = ["5", "9", "12", "19", "24", "36", "48", "56"];
-const CURRENTS = ["0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0"];
+const CURRENTS = ["0.25", "0.5", "1.0", "1.25", "1.5", "2.0", "2.5", "3.0", "3.5", "4.0", "4.5", "5.0"];
 const HOURS = ["1", "2", "4", "6", "8", "12", "16", "24"];
 const BATTERY_VOLTAGES = ["6", "12", "24", "48"];
 const DISCHARGE = 0.8;
@@ -245,12 +245,15 @@ function updateEnergy() {
 // Battery grid section
 function createBatteryContainer() {
     const batteryContainer = document.getElementById('battery-container');
+  
+    const fragment = document.createDocumentFragment();
+
     const container = document.createElement('div');
     container.className = 'battery-container';
     
     container.innerHTML = `
         <div class="battery-header">
-            Recommended Battery
+            Recommended Battery<sup>[1],[2],[3]</sup>
             <span class="battery-note">
                 (${(DISCHARGE * 100).toFixed(0)}% discharge, Inverter Efficiency ${(INVERTER_EFFICIENCY * 100).toFixed(0)}%)
             </span>
@@ -258,11 +261,41 @@ function createBatteryContainer() {
         <div id="battery-recommendations"></div>
     `;
     
-    batteryContainer.appendChild(container);
+    // batteryContainer.appendChild(container);
+    fragment.appendChild(container);
+    fragment.appendChild(createRecommendationsMeaning());
+
+    batteryContainer.appendChild(fragment);
 
     // Initialize battery recommendations
     updateBatteryRecommendations();
 }
+
+function createRecommendationsMeaning() {
+    const recommendationsMeaning = document.createElement('div');
+    recommendationsMeaning.className = 'recommendations-meaning';
+    recommendationsMeaning.id = `recommendations-explanation`;
+
+    recommendationsMeaning.innerHTML = `
+        <p><span class="info-bold">Meaning of the Battery Recommendations:</span></p>
+        <p><sup>[1]</sup> <span class="info-bold">System type: Up or Down.</span></p> 
+        <p><span class="info-bold">Up:</span> The battery voltage is LOWER than the 
+        Max Voltage needed to power the selected devices. You need to use a Step-Up 
+        inverter or a mix of Step-Up and Step-Down inverters if there are multiple devices.</p> 
+        <p><span class="info-bold">Down:</span> The battery voltage is HIGHER than the 
+        Max Voltage needed to power the selected devices. You need to use a Step-Down 
+        inverter or multiple Step-Down inverters if there are multiple devices.</p> 
+        <p><sup>[2]</sup> <span class="info-bold">Maximum current:</span> It is preferable 
+        to use Step-Down inverters to reduce current and avoid losses in the wiring.</p> 
+        <p><sup>[3]</sup> <span class="info-bold">Maximum voltage:</span> If the Max 
+        Voltage of the selected device is SIMILAR to the battery voltage, it is 
+        recommended to use a Universal Inverter. This helps to stabilize the supply 
+        voltage during differences in the Charge and Discharge phases.</p> 
+    `;
+
+    return recommendationsMeaning;
+}
+
 
 function updateBatteryRecommendations() {
     const maxVoltage = parseFloat(document.getElementById('max-voltage').textContent);
@@ -284,16 +317,6 @@ function updateBatteryRecommendations() {
 
     batteryRecommendations.innerHTML = `
         <div class="battery-grid">
-            <!-- <div class="grid-header">Type</div>
-            <div class="grid-header">Voltage</div>
-            <div class="grid-header">Current</div>
-            <div class="grid-header">Capacity</div>
-            
-            <div class="grid-header">Type</div>
-            <div class="grid-header">V</div>
-            <div class="grid-header">A</div>
-            <div class="grid-header">mAh</div>
-            -->
             <div>Up</div>
             ${lowerVoltageCapacity ? `
                 <div>${lowerVoltageCapacity.voltage}V</div>
@@ -375,6 +398,7 @@ function ceilToCell(requiredEnergy, batteryVoltage) {
     const capacity = requiredEnergy / (batteryVoltage * DISCHARGE) * 1000; // Capacity in mAh
     return Math.ceil(capacity / 100) * 100;
 }
+
 // End Battery grid section
   
 createPowerContainer();
